@@ -6,6 +6,7 @@
   "author": "Michał Wiaderkowicz <michal.wiaderkowicz@onet.pl>",
   "license": "MIT",
   "dependencies": {
+    "inquirer": "6.5.0",
     "jimp": "0.6.4"
   }
 }
