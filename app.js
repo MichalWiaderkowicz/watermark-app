@@ -1,5 +1,6 @@
 const Jimp = require("jimp");
 const inquirer = require("inquirer");
+const fs = require("fs");
 
 const generateFileTitle = () => {
   const timestamp = new Date().getTime();
@@ -81,12 +82,20 @@ const startApp = async () => {
         message: "Type your watermark text:",
       },
     ]);
+
     options.watermarkText = text.value;
-    addTextWatermarkToImage(
-      inputImagePath,
-      outputImagePath,
-      options.watermarkText
-    );
+
+    fs.access(inputImagePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        console.error(`${inputImagePath} file does not exist!`);
+      } else {
+        addTextWatermarkToImage(
+          inputImagePath,
+          outputImagePath,
+          options.watermarkText
+        );
+      }
+    });
   } else {
     const image = await inquirer.prompt([
       {
@@ -96,13 +105,25 @@ const startApp = async () => {
         default: "logo.png",
       },
     ]);
+
     options.watermarkImage = image.filename;
     const watermarkImagePath = "./img/" + options.watermarkImage;
-    addImageWatermarkToImage(
-      inputImagePath,
-      outputImagePath,
-      watermarkImagePath
-    );
+
+    fs.access(inputImagePath, fs.constants.F_OK, (err1) => {
+      fs.access(watermarkImagePath, fs.constants.F_OK, (err2) => {
+        if (err1 || err2) {
+          console.error(
+            `${inputImagePath} file or ${watermarkImagePath} file does not exist!`
+          );
+        } else {
+          addImageWatermarkToImage(
+            inputImagePath,
+            outputImagePath,
+            watermarkImagePath
+          );
+        }
+      });
+    });
   }
 };
 
