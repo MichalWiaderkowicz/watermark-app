@@ -9,19 +9,22 @@ const generateFileTitle = () => {
 };
 
 const addTextWatermarkToImage = async function (inputFile, outputFile, text) {
-  const image = await Jimp.read(inputFile);
-  const font = await Jimp.loadFont(Jimp.FONT_SANS_64_BLACK);
-  const textData = {
-    text,
-    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-    alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
-  };
-  image.print(font, 0, 0, textData, image.getWidth(), image.getHeight());
-  await image.quality(100).writeAsync(outputFile);
-  await console.log(
-    "Your text was succesfully added to image! Check results folder!"
-  );
-  await startApp();
+  try {
+    const image = await Jimp.read(inputFile);
+    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+    const textData = {
+      text,
+      alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+      alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+    };
+
+    image.print(font, 0, 0, textData, image.getWidth(), image.getHeight());
+    await image.quality(100).writeAsync(outputFile);
+    console.log("Your text was succesfully added to image!");
+    await startApp();
+  } catch (error) {
+    console.log("Something went wrong... Try again!");
+  }
 };
 //addTextWatermarkToImage(
 // "./test.jpg",
@@ -34,20 +37,22 @@ const addImageWatermarkToImage = async function (
   outputFile,
   watermarkFile
 ) {
-  const image = await Jimp.read(inputFile);
-  const watermark = await Jimp.read(watermarkFile);
-  const x = image.getWidth() / 2 - watermark.getWidth() / 2;
-  const y = image.getHeight() / 2 - watermark.getHeight() / 2;
+  try {
+    const image = await Jimp.read(inputFile);
+    const watermark = await Jimp.read(watermarkFile);
+    const x = image.getWidth() / 2 - watermark.getWidth() / 2;
+    const y = image.getHeight() / 2 - watermark.getHeight() / 2;
 
-  image.composite(watermark, x, y, {
-    mode: Jimp.BLEND_SOURCE_OVER,
-    opacitySource: 0.5,
-  });
-  await image.quality(100).writeAsync(outputFile);
-  await console.log(
-    "Your watermark was succesfully added to image! Check results folder!"
-  );
-  await startApp();
+    image.composite(watermark, x, y, {
+      mode: Jimp.BLEND_SOURCE_OVER,
+      opacitySource: 0.5,
+    });
+    await image.quality(100).writeAsync(outputFile);
+    console.log("Your watermark image was succesfully added to image!");
+    await startApp();
+  } catch (error) {
+    console.log("Something went wrong... Try again!");
+  }
 };
 
 const startApp = async () => {
