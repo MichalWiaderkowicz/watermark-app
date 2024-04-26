@@ -18,6 +18,10 @@ const addTextWatermarkToImage = async function (inputFile, outputFile, text) {
   };
   image.print(font, 0, 0, textData, image.getWidth(), image.getHeight());
   await image.quality(100).writeAsync(outputFile);
+  await console.log(
+    "Your text was succesfully added to image! Check results folder!"
+  );
+  await startApp();
 };
 //addTextWatermarkToImage(
 // "./test.jpg",
@@ -40,6 +44,10 @@ const addImageWatermarkToImage = async function (
     opacitySource: 0.5,
   });
   await image.quality(100).writeAsync(outputFile);
+  await console.log(
+    "Your watermark was succesfully added to image! Check results folder!"
+  );
+  await startApp();
 };
 
 const startApp = async () => {
