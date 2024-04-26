@@ -41,12 +41,6 @@ const addImageWatermarkToImage = async function (
   await image.quality(100).writeAsync(outputFile);
 };
 
-// addImageWatermarkToImage(
-//   "./test.jpg",
-//   "./test-with-watermark2.jpg",
-//   "./logo.png"
-// );
-
 const startApp = async () => {
   // Ask if user is ready
   const answer = await inquirer.prompt([
@@ -77,7 +71,7 @@ const startApp = async () => {
   ]);
 
   const inputImagePath = "./img/" + options.inputImage;
-  const outputImagePath = "./img/" + generateFileTitle(options.inputImage);
+  const outputImagePath = "./results/" + generateFileTitle(options.inputImage);
 
   if (options.watermarkType === "Text watermark") {
     const text = await inquirer.prompt([
@@ -103,10 +97,11 @@ const startApp = async () => {
       },
     ]);
     options.watermarkImage = image.filename;
+    const watermarkImagePath = "./img/" + options.watermarkImage;
     addImageWatermarkToImage(
-      "./img/" + options.inputImage,
-      `./results/${generateFileTitle()}`,
-      "./img/" + options.watermarkImage
+      inputImagePath,
+      outputImagePath,
+      watermarkImagePath
     );
   }
 };
