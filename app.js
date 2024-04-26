@@ -1,6 +1,12 @@
 const Jimp = require("jimp");
 const inquirer = require("inquirer");
 
+const generateFileTitle = () => {
+  const timestamp = new Date().getTime();
+  const fileTitle = `${timestamp}-with_watermark.jpg`;
+  return fileTitle;
+};
+
 const addTextWatermarkToImage = async function (inputFile, outputFile, text) {
   const image = await Jimp.read(inputFile);
   const font = await Jimp.loadFont(Jimp.FONT_SANS_64_BLACK);
@@ -12,11 +18,11 @@ const addTextWatermarkToImage = async function (inputFile, outputFile, text) {
   image.print(font, 0, 0, textData, image.getWidth(), image.getHeight());
   await image.quality(100).writeAsync(outputFile);
 };
-addTextWatermarkToImage(
-  "./test.jpg",
-  "./test-with-watermark.jpg",
-  "Hello world"
-);
+//addTextWatermarkToImage(
+// "./test.jpg",
+//"./test-with-watermark.jpg",
+//"Hello world"
+//);
 
 const addImageWatermarkToImage = async function (
   inputFile,
@@ -35,11 +41,11 @@ const addImageWatermarkToImage = async function (
   await image.quality(100).writeAsync(outputFile);
 };
 
-addImageWatermarkToImage(
-  "./test.jpg",
-  "./test-with-watermark2.jpg",
-  "./logo.png"
-);
+// addImageWatermarkToImage(
+//   "./test.jpg",
+//   "./test-with-watermark2.jpg",
+//   "./logo.png"
+// );
 
 const startApp = async () => {
   // Ask if user is ready
@@ -70,6 +76,9 @@ const startApp = async () => {
     },
   ]);
 
+  const inputImagePath = "./img/" + options.inputImage;
+  const outputImagePath = "./img/" + generateFileTitle(options.inputImage);
+
   if (options.watermarkType === "Text watermark") {
     const text = await inquirer.prompt([
       {
@@ -80,8 +89,8 @@ const startApp = async () => {
     ]);
     options.watermarkText = text.value;
     addTextWatermarkToImage(
-      "./img/" + options.inputImage,
-      "./test-with-watermark.jpg",
+      inputImagePath,
+      outputImagePath,
       options.watermarkText
     );
   } else {
@@ -96,7 +105,7 @@ const startApp = async () => {
     options.watermarkImage = image.filename;
     addImageWatermarkToImage(
       "./img/" + options.inputImage,
-      "./test-with-watermark.jpg",
+      `./results/${generateFileTitle()}`,
       "./img/" + options.watermarkImage
     );
   }
